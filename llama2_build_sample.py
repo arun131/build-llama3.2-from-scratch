@@ -1,8 +1,14 @@
 from llama.build_llama2 import Llama2
 import torch
 from types import SimpleNamespace
+from utils.model_utils import get_device
+from utils.generation_utils import text_to_token_ids, token_ids_to_text, generate
 
 if __name__ == "__main__":
+
+    # Get the device
+    device = get_device()
+
     # Define the configuration
     cfg = {
         "embed_dim": 512,
@@ -19,13 +25,13 @@ if __name__ == "__main__":
     assert cfg.embed_dim % cfg.num_heads == 0, "Embedding dimension must be divisible by the number of heads"
     assert (cfg.embed_dim // cfg.num_heads) % 2 == 0, "Head dimension must be even"
     # Initialize the model
-    model = Llama2(cfg)
+    model = Llama2(cfg).to(device)
     
-    # printing number of parameters
-    print(f"Number of parameters: {sum(p.numel() for p in model.parameters())}")
+    total_params = sum(p.numel() for p in model.parameters())
+    print(f"Total number of parameters: {total_params:,}")
 
     # Define the input
-    x = torch.randint(0, cfg.vocab_size, (2, 10))
+    x = torch.randint(0, cfg.vocab_size, (2, 10)).to(device)
     print("Input", x)
     # Forward pass
     logits = model(x)

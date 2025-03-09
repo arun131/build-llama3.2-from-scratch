@@ -6,6 +6,10 @@ from llama.building_blocks.transformer_block import RMSNorm, Llama2TransformerBl
 class Llama2(nn.Module):
     def __init__(self, cfg: SimpleNamespace):
         super().__init__()
+        # check the configuration
+        assert cfg.embed_dim % cfg.num_heads == 0, f"Embedding dimension must be divisible by the number of heads but the given value is {cfg.embed_dim} and the number of heads is {cfg.num_heads}"
+        assert (cfg.embed_dim // cfg.num_heads) % 2 == 0, f"Embeding dimension must be even but the given value is {cfg.embed_dim}"
+
         self.embed_dim = cfg.embed_dim
         self.num_layers = cfg.num_layers
         self.max_seq_len = cfg.max_seq_len

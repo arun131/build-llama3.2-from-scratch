@@ -11,3 +11,4 @@ huggingface_hub>=0.24.7
 ipywidgets>=8.1.2
 safetensors>=0.4.4
 sentencepiece>=0.1.99
+dotenv>=0.0.5
